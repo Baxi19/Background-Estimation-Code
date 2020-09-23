@@ -1,10 +1,8 @@
-#-----------------------------------------------------------------------------#
-import sys
-
+# -----------------------------------------------------------------------------#
 import numpy as np
 import cv2
 
-#-----------------------------------------------------------------------------#
+# -----------------------------------------------------------------------------#
 def gray_video(name):
     cap = cv2.VideoCapture(name)
     ret = True
@@ -23,16 +21,16 @@ def gray_video(name):
     # When everything done, release the capture
     cap.release()
     cv2.destroyAllWindows()
-    return 1
 
-#-----------------------------------------------------------------------------#
+
+# -----------------------------------------------------------------------------#
 def estimates_background(name):
     # Display median frame
     cv2.imshow('Estimates Background Frame', get_median(name))
     cv2.waitKey(0)
-    return 1
 
-#-----------------------------------------------------------------------------#
+
+# -----------------------------------------------------------------------------#
 def frame_differencing(name):
 
     cap = cv2.VideoCapture(name)
@@ -43,8 +41,7 @@ def frame_differencing(name):
     grayMedianFrame = cv2.cvtColor(get_median(name), cv2.COLOR_BGR2GRAY)
 
     # Loop over all frames
-    ret = True
-    while(ret):
+    while(True):
 
         # Read frame
         ret, frame = cap.read()
@@ -58,12 +55,12 @@ def frame_differencing(name):
         # Display image
         cv2.imshow('frame', dframe)
         if cv2.waitKey(33) == ord('q'):
-            ret = False
+            break
     # Release video object
     cap.release()
-    return 1
 
-#-----------------------------------------------------------------------------#
+
+# -----------------------------------------------------------------------------#
 def get_median(name):
     cap = cv2.VideoCapture(name)
 
@@ -81,37 +78,8 @@ def get_median(name):
     medianFrame = np.median(frames, axis=0).astype(dtype=np.uint8)
     return medianFrame
 
-#-----------------------------------------------------------------------------#
-def menu(name):
-    print("************MAIN MENU**************")
-    #time.sleep(1)
-    print()
 
-    choice = input("""
-                      A: Gray Video
-                      B: Estimates of the Background
-                      C: Frame Differencing
-                      D: Exit
-
-                      Please enter your choice: """)
-
-    if choice == "A" or choice =="a":
-        if gray_video(name) == 1:
-            menu(name)
-    elif choice == "B" or choice =="b":
-        if estimates_background(name):
-            menu(name)
-    elif choice == "C" or choice =="c":
-        if frame_differencing(name):
-            menu(name)
-    elif choice=="D" or choice=="d":
-        return
-    else:
-        print("You must only select either A,B,C or D.")
-        print("Please try again")
-        menu(name)
-
-#-----------------------------------------------------------------------------#
-
-
-menu('driving.mp4')
+name = 'driving.mp4'
+gray_video(name)
+#frame_differencing(name)
+#estimates_background(name)
